@@ -226,7 +226,7 @@ Como usar: Enviar nome, email e senha
 
 #### **Fazer Login**
 **POST** `/auth/login`
-O que faz: Entra no sistema com email e senha
+O que faz: Entra no sistema com email e senha  
 Como usar: Enviar credenciais para autenticar
 
 ```json
@@ -249,7 +249,7 @@ Como usar: Enviar credenciais para autenticar
 
 #### **Fazer uma Aposta**
 **POST** `/apostas/jogador/{jogadorId}`
-O que faz: Cria uma nova aposta e já calcula o resultado na hora
+O que faz: Cria uma nova aposta e já calcula o resultado na hora  
 Como funciona: Sistema decide automaticamente se você ganhou ou perdeu
 
 ```json
@@ -281,18 +281,18 @@ Como funciona: Sistema decide automaticamente se você ganhou ou perdeu
 
 #### **Ver Minhas Apostas**
 **GET** `/apostas/jogador/{jogadorId}?page=1&pageSize=10`
-O que faz: Lista todas as suas apostas (com paginação)
+O que faz: Lista todas as suas apostas (com paginação)  
 Como usar: Passar o ID do jogador e opcionalmente page/pageSize
 
 #### **Cancelar uma Aposta**
 **PUT** `/apostas/{apostaId}/cancelar/{jogadorId}`
-O que faz: Cancela uma aposta e devolve o dinheiro (respeitando as regras)
+O que faz: Cancela uma aposta e devolve o dinheiro (respeitando as regras)  
 Como usar: Passar ID da aposta e do jogador
 
 ## 3. Transações (/transacoes)
 #### **Ver Histórico Financeiro**
 **GET** `/transacoes/jogador/{jogadorId}?page=1&pageSize=10`
-O que faz: Mostra todas as movimentações de dinheiro
+O que faz: Mostra todas as movimentações de dinheiro  
 Como usar: Passar ID do jogador para ver o extrato
 
 ```json
