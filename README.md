@@ -60,11 +60,6 @@ O projeto segue os princípios da **Clean Architecture** e **SOLID**, utilizando
 
 ---
 
-### Padrão Repository
-
-O projeto segue o **Repository Pattern** dentro da **Clean Architecture**, criando uma camada de abstração entre a lógica de negócio e o acesso a dados.  
-Isso garante **desacoplamento**, **testabilidade** e **flexibilidade** para trocar a tecnologia de persistência no futuro.
-
 ### **Camadas da Aplicação:**
 
 - **Controllers**: Endpoints REST, validação de entrada, mapeamento de responses
@@ -72,6 +67,11 @@ Isso garante **desacoplamento**, **testabilidade** e **flexibilidade** para troc
 - **Repositories**: Abstração do acesso a dados, implementação com Entity Framework
 - **Models**: Entidades de domínio, mapeamento para banco de dados
 - **DTOs**: Objetos de transferência
+
+### Padrão Repository
+
+O projeto segue o **Repository Pattern** dentro da **Clean Architecture**, criando uma camada de abstração entre a lógica de negócio e o acesso a dados.  
+Isso garante **desacoplamento**, **testabilidade** e **flexibilidade** para trocar a tecnologia de persistência no futuro.
 
 ---
 
