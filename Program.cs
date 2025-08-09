@@ -21,6 +21,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevPolicy", builder =>
+    {
+        builder
+            .WithOrigins("http://localhost:5173") // Porta padrão do Vite
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 // Registrar Repositories
 builder.Services.AddScoped<IJogadorRepository, JogadorRepository>();
 builder.Services.AddScoped<ICarteiraRepository, CarteiraRepository>();
@@ -57,6 +69,7 @@ var app = builder.Build();
 // Configurar o pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("DevPolicy");
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {

@@ -21,6 +21,15 @@ namespace ApiCassino.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Aposta>> GetUltimasApostasAsync(int jogadorId, int quantidade)
+        {
+            return await _context.Apostas
+                .Where(a => a.JogadorId == jogadorId)
+                .OrderByDescending(a => a.DataAposta)
+                .Take(quantidade)
+                .ToListAsync();
+        }
+        
         public async Task<IEnumerable<Aposta>> GetUltimasApostasPerdidasAsync(int jogadorId, int quantidade = 5)
         {
             return await _dbSet

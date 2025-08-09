@@ -46,35 +46,36 @@ namespace ApiCassino.Services.Implementations
                 throw new InvalidOperationException("Saldo insuficiente para realizar a aposta.");
             }
 
+            var jogador = await _jogadorRepository.GetByIdAsync(jogadorId);
+            if (jogador == null)
+            {
+                throw new ArgumentException("Jogador não encontrado.");
+            }
+
             // Criar aposta
             var aposta = new Aposta
             {
                 JogadorId = jogadorId,
                 Valor = apostaDto.Valor,
                 Status = "Ativa",
-                DataAposta = DateTime.Now
+                DataAposta = DateTime.UtcNow
             };
 
             await _apostaRepository.AddAsync(aposta);
+            await _apostaRepository.SaveChangesAsync(); // ✅ Salvar primeiro para obter ID
 
             // Debitar valor da carteira
             carteira.Saldo -= apostaDto.Valor;
             await _carteiraRepository.UpdateAsync(carteira);
 
-            // Registrar transação
-            await _transacaoService.CriarTransacaoAsync(
-                carteira.Id, 
-                "Aposta", 
-                -apostaDto.Valor, 
-                $"Aposta #{aposta.Id}"
-            );
-
-            await _apostaRepository.SaveChangesAsync();
+            // ✅ Usar método especializado do TransacaoService
+            await _transacaoService.CriarTransacaoApostaAsync(carteira.Id, aposta.Id, apostaDto.Valor);
 
             // Processar resultado da aposta
             await ProcessarResultadoApostaAsync(aposta.Id);
 
-            var jogador = await _jogadorRepository.GetByIdAsync(jogadorId);
+            // Recarregar aposta após processamento para obter status/prêmio atualizados
+            aposta = await _apostaRepository.GetByIdAsync(aposta.Id);
 
             return new ApostaResponseDto
             {
@@ -94,8 +95,10 @@ namespace ApiCassino.Services.Implementations
                 return;
 
             var carteira = await _carteiraRepository.GetByJogadorIdAsync(aposta.JogadorId);
+            if (carteira == null)
+                return;
 
-            // 30% de chance de ganhar (você pode ajustar)
+            // 30% de chance de ganhar
             bool ganhou = _random.NextDouble() <= 0.30;
 
             if (ganhou)
@@ -107,13 +110,8 @@ namespace ApiCassino.Services.Implementations
                 carteira.Saldo += aposta.ValorPremio.Value;
                 await _carteiraRepository.UpdateAsync(carteira);
 
-                // Registrar transação de prêmio
-                await _transacaoService.CriarTransacaoAsync(
-                    carteira.Id,
-                    "Premio",
-                    aposta.ValorPremio.Value,
-                    $"Prêmio da aposta #{aposta.Id}"
-                );
+                // ✅ Usar método especializado do TransacaoService
+                await _transacaoService.CriarTransacaoPremioAsync(carteira.Id, aposta.Id, aposta.ValorPremio.Value);
             }
             else
             {
@@ -129,26 +127,36 @@ namespace ApiCassino.Services.Implementations
 
         private async Task VerificarBonusConsecutivoAsync(int jogadorId, int carteiraId)
         {
-            var ultimasApostas = await _apostaRepository.GetUltimasApostasPerdidasAsync(jogadorId, 5);
+            // Buscar as últimas apostas do jogador
+            var ultimasApostas = await _apostaRepository.GetUltimasApostasAsync(jogadorId, 5);
             
-            if (ultimasApostas.Count() == 5)
+            // Verificar se EXATAMENTE as últimas 5 são perdidas consecutivas
+            if (ultimasApostas.Count() == 5 && ultimasApostas.All(a => a.Status == "Perdida"))
             {
-                // Calcular 10% do valor total gasto nas 5 apostas
-                decimal valorGasto = ultimasApostas.Sum(a => a.Valor);
-                decimal bonus = valorGasto * 0.10m;
+                // ✅ CORREÇÃO: Usar _transacaoService em vez de _transacaoRepository
+                var ultimaTransacaoBonus = await _transacaoService.GetUltimaTransacaoBonusAsync(jogadorId);
+                
+                // Se nunca recebeu bônus OU a última foi antes das 5 apostas perdidas atuais
+                bool podeReceberBonus = ultimaTransacaoBonus == null || 
+                                    ((dynamic)ultimaTransacaoBonus).DataTransacao < ultimasApostas.Min(a => a.DataAposta);
+                
+                if (podeReceberBonus)
+                {
+                    // Calcular 10% do valor total gasto nas 5 apostas
+                    decimal valorGasto = ultimasApostas.Sum(a => a.Valor);
+                    decimal bonus = valorGasto * 0.10m;
 
-                // Creditar bônus na carteira
-                var carteira = await _carteiraRepository.GetByIdAsync(carteiraId);
-                carteira.Saldo += bonus;
-                await _carteiraRepository.UpdateAsync(carteira);
+                    // Creditar bônus na carteira
+                    var carteira = await _carteiraRepository.GetByIdAsync(carteiraId);
+                    if (carteira != null)
+                    {
+                        carteira.Saldo += bonus;
+                        await _carteiraRepository.UpdateAsync(carteira);
 
-                // Registrar transação de bônus
-                await _transacaoService.CriarTransacaoAsync(
-                    carteiraId,
-                    "Bonus",
-                    bonus,
-                    $"Bônus por 5 apostas perdidas consecutivas (10% de R$ {valorGasto:F2})"
-                );
+                        // Criar transação de bônus
+                        await _transacaoService.CriarTransacaoBonusAsync(carteiraId, bonus, 5);
+                    }
+                }
             }
         }
 
@@ -165,8 +173,8 @@ namespace ApiCassino.Services.Implementations
                 Status = a.Status,
                 ValorPremio = a.ValorPremio,
                 DataAposta = a.DataAposta,
-                NomeJogador = jogador.Nome
-            });
+                NomeJogador = jogador?.Nome ?? "Jogador não encontrado"
+            }).ToList();
 
             return new PagedResult<ApostaResponseDto>(apostasDto, totalApostas, page, pageSize);
         }
@@ -174,42 +182,63 @@ namespace ApiCassino.Services.Implementations
         public async Task<ApostaResponseDto> CancelarApostaAsync(int apostaId, int jogadorId)
         {
             var aposta = await _apostaRepository.GetByIdAsync(apostaId);
-            
-            if (aposta == null)
-            {
+            if (aposta == null || aposta.JogadorId != jogadorId)
                 throw new ArgumentException("Aposta não encontrada.");
-            }
 
-            if (aposta.JogadorId != jogadorId)
+            if (aposta.Status == "Cancelada")
+                throw new InvalidOperationException("Esta aposta já foi cancelada anteriormente.");
+
+            var carteira = await _carteiraRepository.GetByJogadorIdAsync(jogadorId);
+            if (carteira == null)
+                throw new ArgumentException("Carteira não encontrada.");
+
+            string statusAnterior = aposta.Status;
+
+            // ✅ CORREÇÃO: Lógica específica para aposta ganha
+            if (aposta.Status == "Ganha" && aposta.ValorPremio.HasValue && aposta.ValorPremio > 0)
             {
-                throw new UnauthorizedAccessException("Você não pode cancelar esta aposta.");
-            }
+                // 1. Estornar valor da aposta (+)
+                carteira.Saldo += aposta.Valor;
+                
+                // 2. Remover o prêmio (-) 
+                carteira.Saldo -= aposta.ValorPremio.Value;
+                
+                await _carteiraRepository.UpdateAsync(carteira);
 
-            if (aposta.Status != "Ativa")
+                // 3. Criar DUAS transações separadas para ficar claro
+                
+                // Transação 1: Estorno da aposta (+)
+                await _transacaoService.CriarTransacaoAsync(
+                    carteira.Id, 
+                    "Cancelamento", 
+                    aposta.Valor, // Positivo
+                    $"Cancelamento da Aposta#{aposta.Id} - estorno"
+                );
+                
+                // Transação 2: Remoção do prêmio (-)
+                await _transacaoService.CriarTransacaoAsync(
+                    carteira.Id, 
+                    "Cancelamento", 
+                    -aposta.ValorPremio.Value, // ✅ NEGATIVO (remoção do prêmio)
+                    $"Cancelamento da Aposta#{aposta.Id} - remoção do prêmio"
+                );
+            }
+            else
             {
-                throw new InvalidOperationException("Apenas apostas ativas podem ser canceladas.");
+                // Para apostas Ativa ou Perdida: apenas estornar valor
+                decimal valorEstorno = aposta.Valor;
+                carteira.Saldo += valorEstorno;
+                await _carteiraRepository.UpdateAsync(carteira);
+
+                await _transacaoService.CriarTransacaoCancelamentoAsync(carteira.Id, aposta.Id, valorEstorno, statusAnterior);
             }
 
-            // Cancelar aposta
+            // Atualizar status da aposta
             aposta.Status = "Cancelada";
             await _apostaRepository.UpdateAsync(aposta);
-
-            // Estornar valor para a carteira
-            var carteira = await _carteiraRepository.GetByJogadorIdAsync(jogadorId);
-            carteira.Saldo += aposta.Valor;
-            await _carteiraRepository.UpdateAsync(carteira);
-
-            // Registrar transação de cancelamento
-            await _transacaoService.CriarTransacaoAsync(
-                carteira.Id,
-                "Cancelamento",
-                aposta.Valor,
-                $"Cancelamento da aposta #{aposta.Id}"
-            );
-
             await _apostaRepository.SaveChangesAsync();
 
-            var jogador = await _jogadorRepository.GetByIdAsync(jogadorId);
+            var jogador = await _jogadorRepository.GetByIdAsync(aposta.JogadorId);
 
             return new ApostaResponseDto
             {
@@ -218,7 +247,7 @@ namespace ApiCassino.Services.Implementations
                 Status = aposta.Status,
                 ValorPremio = aposta.ValorPremio,
                 DataAposta = aposta.DataAposta,
-                NomeJogador = jogador.Nome
+                NomeJogador = jogador?.Nome ?? "Jogador não encontrado"
             };
         }
     }
