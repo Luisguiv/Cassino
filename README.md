@@ -348,3 +348,34 @@ Editar .env com URL da API: `VITE_API_BASE_URL=https://localhost:7297`
 npm start
 ```
 
+## Screenshots da Interface
+
+### **Sistema de Autenticação**
+
+<div align="center">
+
+![Tela de Login](screenshots/login.png) | ![Tela de Registro](screenshots/registro.png)
+:---:|:---:
+**Login** | **Registro**
+
+</div>
+
+---
+
+### **Tela Principal - Dashboard**
+
+![Dashboard Principal](screenshots/dashboard.png)
+
+---
+
+### **Interface de Apostas**
+
+![Tela Apostas](screenshots/apostas.png)
+
+---
+
+### **Interface de Transações**
+
+![Tela Transações](screenshots/transacoes.png)
+
+---
