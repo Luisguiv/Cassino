@@ -45,13 +45,4 @@ Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Frame
 
 O projeto segue os princípios da **Clean Architecture** e **SOLID**, utilizando:
 
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Controllers   │───▶│    Services     │───▶│  Repositories   │
-│  (API Layer)    │    │ (Business Logic)│    │  (Data Access)  │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                        │                        │
-         ▼                        ▼                        ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│      DTOs       │    │   Interfaces    │    │  Entity Models  │
-│ (Data Transfer) │    │ (Abstractions)  │    │  (Domain)       │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+<pre> ```text ┌──────────────┐ ┌───────────────┐ ┌─────────────────┐ │ Controllers │───▶│ Services │───▶│ Repositories │ │ (API Layer) │ │ (Business Logic)│ │ (Data Access) │ └──────────────┘ └───────────────┘ └─────────────────┘ │ │ │ ▼ ▼ ▼ ┌──────────────┐ ┌──────────────┐ ┌─────────────────┐ │ DTOs │ │ Interfaces │ │ Entity Models │ │ (Data Transfer)│ │ (Abstractions)│ │ (Domain) │ └──────────────┘ └──────────────┘ └─────────────────┘ ``` </pre>
