@@ -33,7 +33,7 @@ Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Frame
 - **Sistema de apostas** com 30% de chance de vitória
 - **Saldo inicial** de R$ 1.000 para novos jogadores
 - **Sistema de bônus** por 5 apostas perdidas consecutivas
-- **Cancelamento flexível** de apostas (ativa, ganha ou perdida)
+- **Cancelamento flexível** de apostas (ganha ou perdida)
 - **Histórico completo** de transações paginado
 - **18 testes unitários** com 100% de aprovação
 - **Clean Architecture** com Repository Pattern
@@ -71,7 +71,7 @@ Isso garante **desacoplamento**, **testabilidade** e **flexibilidade** para troc
 - **Services**: Regras de negócio, cálculos, orquestração de operações
 - **Repositories**: Abstração do acesso a dados, implementação com Entity Framework
 - **Models**: Entidades de domínio, mapeamento para banco de dados
-- **DTOs**: Objetos de transferência, validações com Data Annotations
+- **DTOs**: Objetos de transferência
 
 ---
 
