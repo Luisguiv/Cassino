@@ -336,7 +336,7 @@ npm install
 
 #### Configurar variáveis de ambiente
 ```bash
-cp .env.example .env
+	echo. > .env
 ```
 
 Editar .env com URL da API: `VITE_API_BASE_URL=https://localhost:7297`
