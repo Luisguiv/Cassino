@@ -108,4 +108,50 @@ dotnet restore
 dotnet ef database update
 ```
 
----
+### **3. 🚀 Executar API**
+
+```bash
+# Executar em modo desenvolvimento com hot reload
+dotnet run --project src/ApiCassino
+
+# Ou buildar o projeto e depois executar
+dotnet build src/ApiCassino
+dotnet run --project src/ApiCassino
+```
+
+### **4. 🧪 Executar Testes**
+
+```bash
+# Rodar os testes (nível de verbosidade normal)
+dotnet test tests/ApiCassino.Tests --verbosity normal
+
+# Rodar os testes com relatório detalhado no console
+dotnet test tests/ApiCassino.Tests --logger "console;verbosity=detailed"
+```
+
+### **📊 Cobertura de Testes**
+
+<pre>
+| Componente       | Testes  | Cenários Cobertos                     | Status |
+|------------------|---------|---------------------------------------|--------|
+| AuthController   | 10      | Registro, Login, Validações completas |   ✅   |
+| ApostaService    | 4       | Regras de negócio e validações        |   ✅   |
+| TransacaoService | 3       | Operações financeiras                 |   ✅   |
+| Total            | 18      | Cobertura abrangente                  |   ✅   |
+</pre>
+
+## 🎯 Cenários Testados (Resumo)
+
+### Regras de Negócio
+- ✅ Valor mínimo de aposta (**R$ 1,00**)
+- ✅ Saldo suficiente antes de apostar
+- ✅ Saldo inicial de **R$ 1.000** para novos jogadores
+- ✅ Cancelamento flexível de apostas
+- ✅ Transações financeiras com valores corretos
+
+### Validações
+- ✅ Email único no sistema
+- ✅ Campos obrigatórios em todos os endpoints
+- ✅ Formatos válidos (email, senha)
+- ✅ Tratamento de dados nulos
+- ✅ Casos de erro bem definidos
