@@ -1,11 +1,14 @@
 # API Cassino - Sistema de Apostas Online
 
-Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Framework Core**, **MySQL** e arquitetura baseada em **Clean Architecture** com **Repository Pattern** e testes unitários abrangentes.
+Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Framework Core**, **MySQL** e arquitetura baseada em **Clean Architecture** com **Repository Pattern** e testes unitários abrangentes; e **React** para o front-end do sistema.
 
 ![.NET](https://img.shields.io/badge/.NET-6.0-512BD4?style=for-the-badge&logo=dotnet)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Tests](https://img.shields.io/badge/Tests-20%20Passing-brightgreen?style=for-the-badge)
+![Tests](https://img.shields.io/badge/Tests-18%20Passing-brightgreen?style=for-the-badge)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)
+![Material-UI](https://img.shields.io/badge/Material--UI-5-0081CB?style=for-the-badge&logo=mui)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.9-3178C6?style=for-the-badge&logo=typescript)
 
 ---
 
@@ -59,6 +62,11 @@ O projeto segue os princípios da **Clean Architecture** e **SOLID**, utilizando
 
 ---
 
+### Padrão Repository
+
+O projeto segue o **Repository Pattern** dentro da **Clean Architecture**, criando uma camada de abstração entre a lógica de negócio e o acesso a dados.  
+Isso garante **desacoplamento**, **testabilidade** e **flexibilidade** para trocar a tecnologia de persistência no futuro.
+
 ### **Camadas da Aplicação:**
 
 - **Controllers**: Endpoints REST, validação de entrada, mapeamento de responses
@@ -95,31 +103,46 @@ docker compose up -d
 docker ps
 ```
 
-### **2. Executar Migrations**
+### **2. Controle de Migrations**
 
+O projeto usa **Entity Framework Core Migrations** para versionar e aplicar alterações no banco de dados.
+
+#### Executar Migrations
 ```bash
-# Navegar até a pasta do projeto principal
+# Navegar até o projeto principal
 cd src/ApiCassino
 
-# Restaurar dependências do NuGet
+# Restaurar dependências
 dotnet restore
 
-# Aplicar migrations para criar o banco de dados
+# Aplicar todas as migrations pendentes
 dotnet ef database update
 ```
 
-### **3. Executar API**
-
+#### Criar Nova Migration
 ```bash
-# Executar em modo desenvolvimento com hot reload
-dotnet run --project src/ApiCassino
+# Criar migration para mudanças no modelo
+dotnet ef migrations add [NomeDaMigration]
 
-# Ou buildar o projeto e depois executar
-dotnet build src/ApiCassino
-dotnet run --project src/ApiCassino
+# Exemplo:
+dotnet ef migrations add AddUltimoLoginToJogadores
 ```
 
-### **4. Executar Testes**
+#### Reverter Migration
+```bash
+# Voltar para migration anterior
+dotnet ef database update [NomeDaMigrationAnterior]
+
+# Exemplo: voltar para estado inicial
+dotnet ef database update InitialCreate
+```
+
+#### Remover Última Migration
+```bash
+dotnet ef migrations remove
+```
+
+### **3. Executar Testes**
 
 ```bash
 # Ver toda a lista de testes
@@ -132,7 +155,7 @@ dotnet test tests/ApiCassino.Tests --verbosity normal
 dotnet test tests/ApiCassino.Tests --logger "console;verbosity=detailed"
 ```
 
-### **Cobertura de Testes**
+#### **Cobertura de Testes**
 
 <pre>
 | Componente       | Testes  | Cenários Cobertos                     | Status |
@@ -143,21 +166,34 @@ dotnet test tests/ApiCassino.Tests --logger "console;verbosity=detailed"
 | Total            | 18      | Cobertura abrangente                  |   ✅   |
 </pre>
 
-## Cenários Testados
+#### Cenários Testados
 
-### Regras de Negócio
+##### **Regras de Negócio**
 - Valor mínimo de aposta (**R$ 1,00**)
 - Saldo suficiente antes de apostar
 - Saldo inicial de **R$ 1.000** para novos jogadores
 - Cancelamento flexível de apostas
 - Transações financeiras com valores corretos
 
-### Validações
+##### **Validações**
 - Email único no sistema
 - Campos obrigatórios em todos os endpoints
 - Formatos válidos (email, senha)
 - Tratamento de dados nulos
 - Casos de erro bem definidos
+
+### **4. Executar API**
+
+```bash
+# Executar em modo desenvolvimento com hot reload
+dotnet run --project src/ApiCassino
+
+# Ou buildar o projeto e depois executar
+dotnet build src/ApiCassino
+dotnet run --project src/ApiCassino
+```
+
+---
 
 ## Endpoints da API
 
@@ -288,3 +324,27 @@ Como usar: Passar ID do jogador para ver o extrato
 ```
 
 ---
+
+### **5. Executar o Frontend**
+
+#### Clonar repositório e Instalar dependências
+
+```bash
+git clone https://github.com/Luisguiv/CassinoFront
+cd cassino-frontend
+
+npm install
+```
+
+#### Configurar variáveis de ambiente
+```bash
+cp .env.example .env
+```
+
+Editar .env com URL da API: `VITE_API_BASE_URL=https://localhost:7297`
+
+#### Executar em desenvolvimento
+```bash
+npm start
+```
+
