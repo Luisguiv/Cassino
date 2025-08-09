@@ -74,3 +74,38 @@ O projeto segue os princípios da **Clean Architecture** e **SOLID**, utilizando
 ![Diagrama MER](mer/ApiCassinoMER.png)
 
 ---
+
+## 🚀 Como Executar
+
+### **Pré-requisitos**
+- [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0) ⚡
+- [Docker](https://www.docker.com/get-started) 🐳
+- [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) (opcional) 🔧
+
+### **1. 🗄️ Configurar Banco de Dados**
+
+```bash
+# Navegar até a pasta com o arquivo docker-compose.yml
+cd src/ApiCassino
+
+# Subir o container MySQL em segundo plano (modo detached)
+docker compose up -d
+
+# Verificar se o container está rodando (buscar por uma mysql)
+docker ps
+```
+
+### **2. 🔄 Executar Migrations**
+
+```bash
+# Navegar até a pasta do projeto principal
+cd src/ApiCassino
+
+# Restaurar dependências do NuGet
+dotnet restore
+
+# Aplicar migrations para criar o banco de dados
+dotnet ef database update
+```
+
+---
