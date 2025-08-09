@@ -1,8 +1,9 @@
 # API Cassino - Sistema de Apostas Online
 
-Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Framework Core**, **MySQL** e arquitetura baseada em **Clean Architecture** com **Repository Pattern** e testes unitários abrangentes; e **React** para o front-end do sistema.
+Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Framework Core** e **Swagger**, **MySQL** e arquitetura baseada em **Clean Architecture** com **Repository Pattern** e testes unitários abrangentes; e **React** para o front-end do sistema.
 
 ![.NET](https://img.shields.io/badge/.NET-6.0-512BD4?style=for-the-badge&logo=dotnet)
+![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=for-the-badge&logo=swagger)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Tests](https://img.shields.io/badge/Tests-18%20Passing-brightgreen?style=for-the-badge)
