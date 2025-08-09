@@ -17,7 +17,6 @@ namespace ApiCassino.Models
         
         public DateTime DataCriacao { get; set; } = DateTime.Now;
         
-        // Navigation Properties
         public virtual Jogador Jogador { get; set; }
         public virtual ICollection<Transacao> Transacoes { get; set; } = new List<Transacao>();
     }

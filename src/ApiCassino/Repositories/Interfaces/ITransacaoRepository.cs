@@ -6,7 +6,7 @@ namespace ApiCassino.Repositories.Interfaces
     {
         Task<IEnumerable<Transacao>> GetByCarteiraAsync(int carteiraId, int page, int pageSize);
         Task<int> CountByCarteiraAsync(int carteiraId);
-        Task<IEnumerable<Transacao>> GetAllByCarteiraAsync(int carteiraId); // ← Adicionar se não tiver
+        Task<IEnumerable<Transacao>> GetAllByCarteiraAsync(int carteiraId);
         Task<Transacao?> GetUltimaTransacaoBonusAsync(int carteiraId);
         Task AddAsync(Transacao transacao);
         Task SaveChangesAsync();

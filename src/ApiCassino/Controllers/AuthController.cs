@@ -18,7 +18,6 @@ namespace ApiCassino.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] JogadorCreateDto jogadorDto)
         {
-            // ✅ ADICIONAR: Validação de dados nulos
             if (jogadorDto == null)
             {
                 return BadRequest(new { message = "Dados de registro são obrigatórios." });
@@ -42,7 +41,6 @@ namespace ApiCassino.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            // ✅ ADICIONAR: Validação de dados nulos
             if (loginDto == null)
             {
                 return BadRequest(new { message = "Dados de login são obrigatórios." });

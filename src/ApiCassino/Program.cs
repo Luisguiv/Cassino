@@ -87,5 +87,4 @@ app.MapControllers();
 
 app.Run();
 
-// ✅ ADICIONAR: Tornar Program acessível para testes
 public partial class Program { }

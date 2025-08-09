@@ -14,14 +14,13 @@ namespace ApiCassino.Models
         public decimal Valor { get; set; }
         
         [StringLength(20)]
-        public string Status { get; set; } = "Ativa"; // Ativa, Ganha, Perdida, Cancelada
+        public string Status { get; set; } = "Ativa";
         
         [Column(TypeName = "decimal(10,2)")]
         public decimal? ValorPremio { get; set; }
         
         public DateTime DataAposta { get; set; } = DateTime.Now;
         
-        // Navigation Properties
         public virtual Jogador Jogador { get; set; }
     }
 }

@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-  <!-- ✅ CAMINHO CORRETO -->
   <ProjectReference Include="..\..\src\ApiCassino\ApiCassino.csproj" />
   </ItemGroup>
 

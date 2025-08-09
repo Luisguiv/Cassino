@@ -31,7 +31,6 @@ namespace ApiCassino.Repositories.Implementations
                 .CountAsync();
         }
 
-        // ✅ Método que pode estar faltando
         public async Task<IEnumerable<Transacao>> GetAllByCarteiraAsync(int carteiraId)
         {
             return await _context.Transacoes

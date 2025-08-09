@@ -62,13 +62,12 @@ namespace ApiCassino.Services.Implementations
             };
 
             await _apostaRepository.AddAsync(aposta);
-            await _apostaRepository.SaveChangesAsync(); // ✅ Salvar primeiro para obter ID
+            await _apostaRepository.SaveChangesAsync();
 
             // Debitar valor da carteira
             carteira.Saldo -= apostaDto.Valor;
             await _carteiraRepository.UpdateAsync(carteira);
 
-            // ✅ Usar método especializado do TransacaoService
             await _transacaoService.CriarTransacaoApostaAsync(carteira.Id, aposta.Id, apostaDto.Valor);
 
             // Processar resultado da aposta
@@ -110,7 +109,6 @@ namespace ApiCassino.Services.Implementations
                 carteira.Saldo += aposta.ValorPremio.Value;
                 await _carteiraRepository.UpdateAsync(carteira);
 
-                // ✅ Usar método especializado do TransacaoService
                 await _transacaoService.CriarTransacaoPremioAsync(carteira.Id, aposta.Id, aposta.ValorPremio.Value);
             }
             else
@@ -133,7 +131,6 @@ namespace ApiCassino.Services.Implementations
             // Verificar se EXATAMENTE as últimas 5 são perdidas consecutivas
             if (ultimasApostas.Count() == 5 && ultimasApostas.All(a => a.Status == "Perdida"))
             {
-                // ✅ CORREÇÃO: Usar _transacaoService em vez de _transacaoRepository
                 var ultimaTransacaoBonus = await _transacaoService.GetUltimaTransacaoBonusAsync(jogadorId);
                 
                 // Se nunca recebeu bônus OU a última foi antes das 5 apostas perdidas atuais
@@ -194,7 +191,6 @@ namespace ApiCassino.Services.Implementations
 
             string statusAnterior = aposta.Status;
 
-            // ✅ CORREÇÃO: Lógica específica para aposta ganha
             if (aposta.Status == "Ganha" && aposta.ValorPremio.HasValue && aposta.ValorPremio > 0)
             {
                 // 1. Estornar valor da aposta (+)
@@ -219,7 +215,7 @@ namespace ApiCassino.Services.Implementations
                 await _transacaoService.CriarTransacaoAsync(
                     carteira.Id, 
                     "Cancelamento", 
-                    -aposta.ValorPremio.Value, // ✅ NEGATIVO (remoção do prêmio)
+                    -aposta.ValorPremio.Value,
                     $"Cancelamento da Aposta#{aposta.Id} - remoção do prêmio"
                 );
             }

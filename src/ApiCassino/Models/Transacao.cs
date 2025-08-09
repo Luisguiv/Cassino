@@ -10,7 +10,7 @@ namespace ApiCassino.Models
         public int CarteiraId { get; set; }
         
         [StringLength(20)]
-        public string Tipo { get; set; } // Aposta, Premio, Bonus, Cancelamento
+        public string Tipo { get; set; }
         
         [Column(TypeName = "decimal(10,2)")]
         public decimal Valor { get; set; }

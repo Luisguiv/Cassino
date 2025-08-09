@@ -46,7 +46,6 @@ namespace ApiCassino.Services.Implementations
                 DataCriacao = DateTime.UtcNow
             };
 
-            // ✅ CORREÇÃO: Usar AddAsync em vez de CreateAsync
             await _jogadorRepository.AddAsync(jogador);
             await _jogadorRepository.SaveChangesAsync();
 
@@ -57,7 +56,6 @@ namespace ApiCassino.Services.Implementations
                 Saldo = 1000m
             };
 
-            // ✅ CORREÇÃO: Usar AddAsync em vez de CreateAsync
             await _carteiraRepository.AddAsync(carteira);
             await _carteiraRepository.SaveChangesAsync();
 

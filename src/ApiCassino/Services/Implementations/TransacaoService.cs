@@ -72,7 +72,6 @@ namespace ApiCassino.Services.Implementations
             await _transacaoRepository.SaveChangesAsync();
         }
 
-        // ✅ NOVOS métodos especializados (usando apenas os repositories que você tem)
         public async Task CriarTransacaoApostaAsync(int carteiraId, int apostaId, decimal valor)
         {
             await CriarTransacaoAsync(
