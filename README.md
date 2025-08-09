@@ -46,7 +46,7 @@ Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Frame
 O projeto segue os princípios da **Clean Architecture** e **SOLID**, utilizando:
 <pre>
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Controllers   │───▶│    Services     │───▶│  Repositories   │
+│   Controllers   │──▶│    Services      │──▶│  Repositories   │
 │  (API Layer)    │    │ (Business Logic)│    │  (Data Access)  │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                        │                        │
@@ -56,3 +56,21 @@ O projeto segue os princípios da **Clean Architecture** e **SOLID**, utilizando
 │ (Data Transfer) │    │ (Abstractions)  │    │  (Domain)       │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 </pre>
+
+---
+
+### **Camadas da Aplicação:**
+
+- **Controllers**: Endpoints REST, validação de entrada, mapeamento de responses
+- **Services**: Regras de negócio, cálculos, orquestração de operações
+- **Repositories**: Abstração do acesso a dados, implementação com Entity Framework
+- **Models**: Entidades de domínio, mapeamento para banco de dados
+- **DTOs**: Objetos de transferência, validações com Data Annotations
+
+---
+
+## 🗄️ Modelo Entidade Relacional (MER)
+
+![Diagrama MER](mer/ApiCassinoMER.png)
+
+---
