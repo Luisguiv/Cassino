@@ -35,10 +35,10 @@ Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Frame
 - **Sistema de bônus** por 5 apostas perdidas consecutivas
 - **Cancelamento flexível** de apostas (ativa, ganha ou perdida)
 - **Histórico completo** de transações paginado
-- **20 testes unitários** com 100% de aprovação
+- **18 testes unitários** com 100% de aprovação
 - **Clean Architecture** com Repository Pattern
 - **Docker** para ambiente de desenvolvimento
-- **Documentação completa** com Swagger
+- **Documentação** com Swagger
 
 ---
 
