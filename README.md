@@ -12,21 +12,18 @@ Sistema completo de apostas online desenvolvido em **.NET 6** com **Entity Frame
 
 ---
 
-## 📋 Índice
+## Índice
 
-- [✨ Características](#-características)
-- [🏗️ Arquitetura](#️-arquitetura)
-- [📁 Estrutura do Projeto](#-estrutura-do-projeto)
-- [🗄️ Modelo Entidade Relacional (MER)](#️-modelo-entidade-relacional-mer)
-- [🚀 Como Executar](#-como-executar)
-- [🧪 Testes](#-testes)
-- [📡 API REST - Endpoints](#-api-rest---endpoints)
-- [🎯 Regras de Negócio](#-regras-de-negócio)
-- [✅ Validações](#-validações)
-- [🔄 Padrão Repository](#-padrão-repository)
-- [📊 Controle de Migrations](#-controle-de-migrations)
-- [🛠️ Tecnologias](#️-tecnologias)
-- [🔗 Links Úteis](#-links-úteis)
+- [Características](#-características)
+- [Arquitetura](#️-arquitetura)
+- [Modelo Entidade Relacional (MER)](#-modelo-entidade-relacional-mer)
+- [Como Executar](#-como-executar)
+  - [Configurar Banco de Dados](#1-configurar-banco-de-dados)
+  - [Controle de Migrations](#2-controle-de-migrations)
+  - [Executar Testes](#3-executar-testes)
+  - [Executar API](#4-executar-api)
+  - [Executar o Frontend](#5-executar-o-frontend)
+- [Screenshots da Interface](#screenshots-da-interface)
 
 ---
 
